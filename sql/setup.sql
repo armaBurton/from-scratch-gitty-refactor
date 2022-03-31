@@ -10,6 +10,6 @@ CREATE TABLE users (
 
 CREATE TABLE gweets (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  text TEXT NOT NULL
+  text TEXT NOT NULL,
   username TEXT REFERENCES users(gh_username)
 );
