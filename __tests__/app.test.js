@@ -14,6 +14,8 @@ const app = require('../lib/app');
 //   };
 // });
 
+jest.mock('../lib/utils/github');
+
 describe('from-scratch-gitty routes', () => {
   beforeEach(() => {
     return setup(pool);
@@ -28,7 +30,7 @@ describe('from-scratch-gitty routes', () => {
       .get('/api/v1/auth/login');
 
     expect(req.header.location).toMatch(
-      `https://github.com/login/oauth/authorize?client_id=fca10e824847706829ae&scope=user&redirect_uri=http://localhost:7890/api/v1/auth/login/callback`
+      'https://github.com/login/oauth/authorize?client_id=fca10e824847706829ae&scope=user&redirect_uri=http://localhost:7890/api/v1/auth/login/callback'
     );
     
   });
@@ -40,7 +42,7 @@ describe('from-scratch-gitty routes', () => {
       .redirects(1);
 
     expect(req.body).toEqual({
-      id: expect.any(String),
+      avatar: expect.any(String),
       username: 'fake_github_user',
       email: 'not-real@example.com',
       iat: expect.any(Number),
@@ -48,7 +50,5 @@ describe('from-scratch-gitty routes', () => {
     });
   });
 });
-
-// /https:\/\/github.com\/login\/oauth\/authorize?client_id=[\w\d]+&scope=user&redirect_uri=http:\/\/localhost:7890\/api\/v1\/auth\/login\/callback/i
 
 

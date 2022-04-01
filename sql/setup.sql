@@ -4,12 +4,13 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS gweets CASCADE;
 
 CREATE TABLE users (
-  gh_username TEXT NOT NULL PRIMARY KEY,
-  gh_photo_url TEXT NOT NULL
+  username TEXT NOT NULL PRIMARY KEY,
+  avatar TEXT NOT NULL,
+  email TEXT NOT NULL
 );
 
 CREATE TABLE gweets (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   text TEXT NOT NULL,
-  username TEXT REFERENCES users(gh_username)
+  username TEXT REFERENCES users(username)
 );
