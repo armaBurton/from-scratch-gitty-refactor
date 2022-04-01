@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 fetch('/api/v1/auth/verify')
   .then(res => {
     if (res.ok) return res.json();
@@ -41,7 +42,7 @@ function renderIsLoggedIn(user){
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
       body: JSON.stringify({ text, username: 'test_user'})
     });
   });
