@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 fetch('/api/v1/auth/verify')
   .then(res => {
     if (res.ok) return res.json();

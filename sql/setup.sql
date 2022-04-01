@@ -14,3 +14,13 @@ CREATE TABLE gweets (
   text TEXT NOT NULL,
   username TEXT REFERENCES users(username)
 );
+
+INSERT INTO users (username, avatar, email)
+VALUES
+('picky_butt', 'https://www.placecage.com/300/300', 'stinky_finger@itchy.bung'),
+('whack_a_mole', 'https://www.placecage.com/300/300', 'ill_take_two@lumps.whack');
+
+INSERT INTO gweets (text, username)
+VALUES
+('It''s good, but I''ve had better', 'picky_butt'),
+('My grandma slaps harder', 'whack_a_mole');
