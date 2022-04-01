@@ -49,6 +49,29 @@ describe('from-scratch-gitty routes', () => {
       exp: expect.any(Number)
     });
   });
+
+  it('should sign a user out', async () => {
+    //login user
+    let req = await request
+      .agent(app)
+      .get('/api/v1/auth/login/callback?code=dawefawef')
+      .redirects(1);
+    expect(req.body).toEqual({
+      avatar: expect.any(String),
+      username: 'fake_github_user',
+      email: 'not-real@example.com',
+      iat: expect.any(Number),
+      exp: expect.any(Number)
+    });
+
+    //logout user, delete cookie
+    req = await request.agent(app)
+      .delete('/logout/');
+    expect(req.body).toEqual({
+      status: 404,
+      message: 'Not Found'
+    });
+  });
 });
 
 
