@@ -11,7 +11,7 @@ CREATE TABLE users (
 
 CREATE TABLE gweets (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  text TEXT NOT NULL,
+  text VARCHAR(250) NOT NULL,
   username TEXT REFERENCES users(username)
 );
 
