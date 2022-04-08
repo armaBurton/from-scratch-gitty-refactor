@@ -23,4 +23,3 @@ jobs:
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
-        PORT: 7890
