@@ -27,7 +27,7 @@ describe('from-scratch-gitty routes', () => {
   it('should login and redirect users to /api/v1/auth/dashboard', async () => {
     const req = await request
       .agent(app)
-      .get('/api/v1/auth/login/callback?code=42&test=1')
+      .get('/api/v1/auth/login/callback1?code=42')
       .redirects(1);
 
     expect(req.body).toEqual({
@@ -43,8 +43,9 @@ describe('from-scratch-gitty routes', () => {
     //login user
     let req = await request
       .agent(app)
-      .get('/api/v1/auth/login/callback?code=dawefawef&test=1')
+      .get('/api/v1/auth/login/callback1?code1=13')
       .redirects(1);
+
     expect(req.body).toEqual({
       avatar: expect.any(String),
       username: 'fake_github_user',
@@ -80,18 +81,18 @@ describe('from-scratch-gitty routes', () => {
 
     //try to get gweets not logged in
     let req = await request.agent(app)
-      .get('/api/v1/gweets/getAll');
+      .get('/api/v1/gweets/');
     expect(req.body).toEqual(notLoggedIn);
-      
+
     //login user; redirect to get all gweets
     req = await request.agent(app)
-      .get('/api/v1/auth/login/callback?code=13&test=2')
+      .get('/api/v1/auth/login/callback2?code=13')
       .redirects(1);
 
     expect(req.body).toEqual(expected);
   });
 
-  it('should allow a logged in user to post a new gweet', async () => {
+  it.only('should allow a logged in user to post a new gweet', async () => {
     const newGweet = {
       text: 'I\'m not really here, Are you?',
       username: 'fake_github_user'
@@ -106,35 +107,69 @@ describe('from-scratch-gitty routes', () => {
     };
 
     const notLoggedIn = { status: 401, message: 'You must be signed in to continue' };
-
-    const agent = request.agent(app);
-
+  
     const returnedGweet = {
       id: expect.any(String),
-      text: "I'm not really here, Are you?",
+      text: 'I\'m not really here, Are you?',
       username: 'fake_github_user'
     };
 
-    await agent.delete('/logout/');
+    const req = await request.agent(app)
+      .post('/api/v1/gweets');
 
-    //try to insert new tweet while not logged in
-    let req = await agent
-      .post('/api/v1/gweets/newGweet');
-    expect(req.body).toEqual(notLoggedIn);
-
-    //login user
-    req = await agent
-      .get('/api/v1/auth/login/callback?code=13&test=1')
-      .redirects(1);
-    expect(req.body).toEqual(loggedIn);
-
-    //Post new Gweet
-    req = await agent
-      .post('/api/v1/gweets/newgweet')
-      .send(newGweet);
-    expect(req.body).toEqual(returnedGweet);
+    console.log('|| req.body >', req.body);
 
   });
+
+  // it.only('should allow a logged in user to post a new gweet', async () => {
+  //   const newGweet = {
+  //     text: 'I\'m not really here, Are you?',
+  //     username: 'fake_github_user'
+  //   };
+
+  //   const loggedIn = {
+  //     username: 'fake_github_user',
+  //     avatar: 'https://www.placecage.com/gif/300/300',
+  //     email: 'not-real@example.com',
+  //     iat: expect.any(Number),
+  //     exp: expect.any(Number)
+  //   };
+
+  //   const notLoggedIn = { status: 401, message: 'You must be signed in to continue' };
+  
+  //   const returnedGweet = {
+  //     id: expect.any(String),
+  //     text: 'I\'m not really here, Are you?',
+  //     username: 'fake_github_user'
+  //   };
+  
+  //   const agent = request.agent(app);
+  //   await agent.delete('/logout/');
+
+  //   //try to insert new tweet while not logged in
+  //   let req = await request.agent(app)
+  //     .post('/api/v1/gweets/');
+  //   expect(req.body).toEqual(notLoggedIn);
+  //   console.log('|| req.body 125>', req.body);
+
+  //   //login user
+  //   req = await request.agent(app)
+  //     .get('/api/v1/auth/login/callback3?code=13')
+  //     .redirects(1);
+  //   console.log(`|| req.body 130>`, req.body);
+  //   // req = await request.agent(app)
+  //   //   .get('/api/v1/auth/login/callback3?code=13');
+
+  //   // expect(req.body).toEqual(loggedIn);
+  //   // console.log('|| req.body >', req.body);
+
+  //   // //Post new Gweet
+  //   req = await agent
+  //     .post('/api/v1/gweets/')
+  //     .send(newGweet);
+  //   expect(req.body).toEqual(returnedGweet);
+
+  // });
 });
 
 
