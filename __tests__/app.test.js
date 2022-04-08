@@ -153,6 +153,17 @@ describe('from-scratch-gitty routes', () => {
   it('should return an array of three random quotes', async () => {
     const agent = request.agent(app);
 
+    const expected = [{
+      author: expect.any(String), 
+      content: expect.any(String)
+    }, {
+      author: expect.any(String), 
+      content: expect.any(String)
+    }, {
+      author: expect.any(String), 
+      content: expect.any(String)
+    }];
+
     //login user
     let req = await agent
       .get('/api/v1/auth/login/callback2?code=13')
@@ -160,6 +171,8 @@ describe('from-scratch-gitty routes', () => {
 
     req = await agent
       .get('/api/v1/quotes/');
+
+    expect(req.body).toEqual(expected);
 
   });
 
