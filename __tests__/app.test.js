@@ -42,26 +42,27 @@ describe('from-scratch-gitty routes', () => {
 
   it('should sign a user out', async () => {
     //login user
-    let req = await request
+    return request
       .agent(app)
       .get('/api/v1/auth/login/callback1?code1=13')
-      .redirects(1);
-
-    expect(req.body).toEqual({
-      avatar: expect.any(String),
-      username: 'fake_github_user',
-      email: 'not-real@example.com',
-      iat: expect.any(Number),
-      exp: expect.any(Number)
-    });
-
-    //logout user, delete cookie
-    req = await request.agent(app)
-      .delete('/logout/');
-    expect(req.body).toEqual({
-      status: 404,
-      message: 'Not Found'
-    });
+      .redirects(1)
+      .then(req => {
+        return expect(req.body).toEqual({
+          avatar: expect.any(String),
+          username: 'fake_github_user',
+          email: 'not-real@example.com',
+          iat: expect.any(Number),
+          exp: expect.any(Number)
+        });
+      })
+      .then(() => request.agent(app)
+        .delete('/logout/'))
+      .then(req => {
+        return expect(req.body).toEqual({
+          status: 404,
+          message: 'Not Found'
+        });
+      });
   });
 
   it('should get a list of all posts by all users', async () => {
