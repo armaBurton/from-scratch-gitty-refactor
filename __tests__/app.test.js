@@ -91,7 +91,7 @@ describe('from-scratch-gitty routes', () => {
       .then(req => expect(req.body).toEqual(expected));
   });
 
-  it('should allow a logged in user to post a new gweet', async () => {
+  it('should allow a logged in user to post a new gweet', () => {
     const newGweet = {
       text: 'I\'m not really here, Are you?',
       username: 'fake_github_user'
@@ -138,7 +138,7 @@ describe('from-scratch-gitty routes', () => {
     
   });
 
-  it('should return an array of three random quotes', async () => {
+  it('should return an array of three random quotes', () => {
     const agent = request.agent(app);
 
     const expected = [{
@@ -153,14 +153,11 @@ describe('from-scratch-gitty routes', () => {
     }];
 
     //login user
-    let req = await agent
+    return agent
       .get('/api/v1/auth/login/callback2?code=13')
-      .redirects(1);
-
-    req = await agent
-      .get('/api/v1/quotes/');
-
-    expect(req.body).toEqual(expected);
+      .redirects(1)
+      .then(() => agent.get('/api/v1/quotes'))
+      .then(req => expect(req.body).toEqual(expected));
 
   });
 
