@@ -81,7 +81,6 @@ describe('from-scratch-gitty routes', () => {
 
     const notLoggedIn = { status: 401, message: 'You must be signed in to continue' };
     
-
     //try to get gweets not logged in
     return request.agent(app)
       .get('/api/v1/gweets/')
@@ -119,33 +118,24 @@ describe('from-scratch-gitty routes', () => {
       }
     ];
 
-    //view gweets while not logged in.
     const agent = request.agent(app);
 
-    let req = await agent
-      .post('/api/v1/gweets');
-    expect(req.body).toEqual(notLoggedIn);
-
-    // //try to insert new gweet while not logged in
-    req = await agent
-      .post('/api/v1/gweets')
-      .send(newGweet);
-
-    expect(req.body).toEqual(notLoggedIn);
-
-    // //login user
-    req = await agent
-      .get('/api/v1/auth/login/callback2?code=13')
-      .redirects(1);
-
-    expect(req.body).toEqual(loggedInReturn);
-
-    // //post new Gweet
-    req = await agent
-      .post('/api/v1/gweets/')
-      .send(newGweet);
-
-    expect(req.body).toEqual(newGweetReturn);
+    return agent
+      .post('/api/v1/gweets') //view Gweets while not logged in
+      .then(req => expect(req.body).toEqual(notLoggedIn))
+      .then(() => agent  //try to insert a new gweet while not logged in
+        .post('/api/v1/gweets')
+        .send(newGweet))
+      .then(req => expect(req.body).toEqual(notLoggedIn))
+      .then(() => agent //login user
+        .get('/api/v1/auth/login/callback2?code13')
+        .redirects(1))
+      .then(req => expect(req.body).toEqual(loggedInReturn))
+      .then(() => agent  //post new Gweet
+        .post('/api/v1/gweets/')
+        .send(newGweet))
+      .then(req => expect(req.body).toEqual(newGweetReturn));
+    
   });
 
   it('should return an array of three random quotes', async () => {
