@@ -2,6 +2,8 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
+const { agent } = require('superagent');
+const req = require('express/lib/request');
 
 jest.mock('../lib/utils/github');
 
@@ -146,6 +148,19 @@ describe('from-scratch-gitty routes', () => {
       .send(newGweet);
 
     expect(req.body).toEqual(newGweetReturn);
+  });
+
+  it('should return an array of three random quotes', async () => {
+    const agent = request.agent(app);
+
+    //login user
+    let req = await agent
+      .get('/api/v1/auth/login/callback2?code=13')
+      .redirects(1);
+
+    req = await agent
+      .get('/api/v1/quotes/');
+
   });
 
 });
