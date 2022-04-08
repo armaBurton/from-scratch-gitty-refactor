@@ -135,7 +135,7 @@ describe('from-scratch-gitty routes', () => {
 
     // //login user
     req = await agent
-      .get('/api/v1/auth/login/callback3?code=13')
+      .get('/api/v1/auth/login/callback2?code=13')
       .redirects(1);
 
     expect(req.body).toEqual(loggedInReturn);
