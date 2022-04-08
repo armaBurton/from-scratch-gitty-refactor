@@ -124,7 +124,6 @@ describe('from-scratch-gitty routes', () => {
 
     let req = await agent
       .post('/api/v1/gweets');
-    console.log('|| req.body >', req.body);
     expect(req.body).toEqual(notLoggedIn);
 
     // //try to insert new gweet while not logged in
@@ -139,7 +138,6 @@ describe('from-scratch-gitty routes', () => {
       .get('/api/v1/auth/login/callback3?code=13')
       .redirects(1);
 
-    console.log('|| req.body >', req.body);
     expect(req.body).toEqual(loggedInReturn);
 
     // //post new Gweet
@@ -147,7 +145,6 @@ describe('from-scratch-gitty routes', () => {
       .post('/api/v1/gweets/')
       .send(newGweet);
 
-    console.log('|| req.body >', req.body);
     expect(req.body).toEqual(newGweetReturn);
   });
 
