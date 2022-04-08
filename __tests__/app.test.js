@@ -40,7 +40,7 @@ describe('from-scratch-gitty routes', () => {
 
   });
 
-  it('should sign a user out', async () => {
+  it('should sign a user out', () => {
     //login user
     return request
       .agent(app)
@@ -80,18 +80,16 @@ describe('from-scratch-gitty routes', () => {
     ];
 
     const notLoggedIn = { status: 401, message: 'You must be signed in to continue' };
+    
 
     //try to get gweets not logged in
-    let req = await request.agent(app)
-      .get('/api/v1/gweets/');
-    expect(req.body).toEqual(notLoggedIn);
-
-    //login user; redirect to get all gweets
-    req = await request.agent(app)
-      .get('/api/v1/auth/login/callback2?code=13')
-      .redirects(1);
-
-    expect(req.body).toEqual(expected);
+    return request.agent(app)
+      .get('/api/v1/gweets/')
+      .then(req => expect(req.body).toEqual(notLoggedIn))
+      .then(() => request.agent(app)
+        .get('/api/v1/auth/login/callback2?code=13')
+        .redirects(1))
+      .then(req => expect(req.body).toEqual(expected));
   });
 
   it('should allow a logged in user to post a new gweet', async () => {
