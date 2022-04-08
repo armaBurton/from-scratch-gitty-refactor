@@ -23,19 +23,21 @@ describe('from-scratch-gitty routes', () => {
     
   });
 
-  it('should login and redirect users to /api/v1/auth/dashboard', async () => {
-    const req = await request
+  it('should login and redirect users to /api/v1/auth/dashboard', () => {
+    return request
       .agent(app)
       .get('/api/v1/auth/login/callback1?code=42')
-      .redirects(1);
+      .redirects(1)
+      .then(req => {
+        expect(req.body).toEqual({
+          avatar: expect.any(String),
+          username: 'fake_github_user',
+          email: 'not-real@example.com',
+          iat: expect.any(Number),
+          exp: expect.any(Number)
+        });
+      });
 
-    expect(req.body).toEqual({
-      avatar: expect.any(String),
-      username: 'fake_github_user',
-      email: 'not-real@example.com',
-      iat: expect.any(Number),
-      exp: expect.any(Number)
-    });
   });
 
   it('should sign a user out', async () => {
