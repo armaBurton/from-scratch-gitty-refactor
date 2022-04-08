@@ -32,6 +32,7 @@
     "supertest": "^6.2.2"
   },
   "dependencies": {
+    "agent": "^0.2.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",

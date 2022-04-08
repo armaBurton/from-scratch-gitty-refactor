@@ -92,84 +92,65 @@ describe('from-scratch-gitty routes', () => {
     expect(req.body).toEqual(expected);
   });
 
-  it.only('should allow a logged in user to post a new gweet', async () => {
+  it('should allow a logged in user to post a new gweet', async () => {
     const newGweet = {
       text: 'I\'m not really here, Are you?',
       username: 'fake_github_user'
     };
-
-    const loggedIn = {
-      username: 'fake_github_user',
-      avatar: 'https://www.placecage.com/gif/300/300',
-      email: 'not-real@example.com',
-      iat: expect.any(Number),
-      exp: expect.any(Number)
-    };
-
-    const notLoggedIn = { status: 401, message: 'You must be signed in to continue' };
-  
-    const returnedGweet = {
+    
+    const newGweetReturn = {
       id: expect.any(String),
       text: 'I\'m not really here, Are you?',
       username: 'fake_github_user'
     };
 
-    const req = await request.agent(app)
+    const notLoggedIn = { status: 401, message: 'You must be signed in to continue' };
+
+    const loggedInReturn = [
+      {
+        id: '1',
+        text: 'It\'s good, but I\'ve had better',
+        username: 'picky_butt'
+      },
+      {
+        id: '2',
+        text: 'My grandma slaps harder',
+        username: 'whack_a_mole'
+      }
+    ];
+
+    //view gweets while not logged in.
+    const agent = request.agent(app);
+
+    let req = await agent
       .post('/api/v1/gweets');
+    console.log('|| req.body >', req.body);
+    expect(req.body).toEqual(notLoggedIn);
+
+    // //try to insert new gweet while not logged in
+    req = await agent
+      .post('/api/v1/gweets')
+      .send(newGweet);
+
+    expect(req.body).toEqual(notLoggedIn);
+
+    // //login user
+    req = await agent
+      .get('/api/v1/auth/login/callback3?code=13')
+      .redirects(1);
 
     console.log('|| req.body >', req.body);
+    expect(req.body).toEqual(loggedInReturn);
 
+    // //post new Gweet
+    req = await agent
+      .post('/api/v1/gweets/')
+      .send(newGweet);
+
+    console.log('|| req.body >', req.body);
+    expect(req.body).toEqual(newGweetReturn);
   });
 
-  // it.only('should allow a logged in user to post a new gweet', async () => {
-  //   const newGweet = {
-  //     text: 'I\'m not really here, Are you?',
-  //     username: 'fake_github_user'
-  //   };
-
-  //   const loggedIn = {
-  //     username: 'fake_github_user',
-  //     avatar: 'https://www.placecage.com/gif/300/300',
-  //     email: 'not-real@example.com',
-  //     iat: expect.any(Number),
-  //     exp: expect.any(Number)
-  //   };
-
-  //   const notLoggedIn = { status: 401, message: 'You must be signed in to continue' };
-  
-  //   const returnedGweet = {
-  //     id: expect.any(String),
-  //     text: 'I\'m not really here, Are you?',
-  //     username: 'fake_github_user'
-  //   };
-  
-  //   const agent = request.agent(app);
-  //   await agent.delete('/logout/');
-
-  //   //try to insert new tweet while not logged in
-  //   let req = await request.agent(app)
-  //     .post('/api/v1/gweets/');
-  //   expect(req.body).toEqual(notLoggedIn);
-  //   console.log('|| req.body 125>', req.body);
-
-  //   //login user
-  //   req = await request.agent(app)
-  //     .get('/api/v1/auth/login/callback3?code=13')
-  //     .redirects(1);
-  //   console.log(`|| req.body 130>`, req.body);
-  //   // req = await request.agent(app)
-  //   //   .get('/api/v1/auth/login/callback3?code=13');
-
-  //   // expect(req.body).toEqual(loggedIn);
-  //   // console.log('|| req.body >', req.body);
-
-  //   // //Post new Gweet
-  //   req = await agent
-  //     .post('/api/v1/gweets/')
-  //     .send(newGweet);
-  //   expect(req.body).toEqual(returnedGweet);
-
-  // });
 });
 
 
