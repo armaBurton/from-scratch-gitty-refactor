@@ -2,8 +2,6 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const { agent } = require('superagent');
-const req = require('express/lib/request');
 
 jest.mock('../lib/utils/github');
 
@@ -16,13 +14,12 @@ describe('from-scratch-gitty routes', () => {
     pool.end();
   });
 
-  it('should redirect to the github oath page upon load', async () => {
-    const req = await request(app)
-      .get('/api/v1/auth/login');
-
-    expect(req.header.location).toMatch(
-      'https://github.com/login/oauth/authorize?client_id=fca10e824847706829ae&scope=user&redirect_uri=http://localhost:7890/api/v1/auth/login/callback'
-    );
+  it('should redirect to the github oath page upon load', () => {
+    return request(app)
+      .get('/api/v1/auth/login')
+      .then(req => {
+        return expect(req.header.location).toMatch('https://github.com/login/oauth/authorize?client_id=fca10e824847706829ae&scope=user&redirect_uri=http://localhost:7890/api/v1/auth/login/callback');
+      });
     
   });
 
